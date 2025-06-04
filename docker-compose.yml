@@ -1,0 +1,96 @@
+services:
+
+  moviecat-backend:
+    container_name: moviecat-backend
+    build: ./backend
+    environment:
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      MAIL_DOMAIN: ${MAIL_DOMAIN}
+      DOMAIN: ${DOMAIN}
+      EMAIL: ${EMAIL}
+      PORT: ${PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USER: ${REDIS_USER}
+      REDIS_USER_PASSWORD: ${REDIS_USER_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      SESSION_NAME: ${SESSION_NAME}
+      SESSION_SECRET_KEY: ${SESSION_SECRET_KEY}
+      API_HOST: ${API_HOST}
+      API_HOST_IMAGES: ${API_HOST_IMAGES}
+      API_KEY: ${API_KEY}
+    networks:
+      - newtone
+    volumes:
+      - dkim_data:/etc/opendkim/keys/:ro
+    depends_on:
+      - moviecat-redis
+      - moviecat-postgresql
+
+  moviecat-web:
+    container_name: moviecat-web
+    build: ./web
+    environment:
+      DANGEROUSLY_DISABLE_HOST_CHECK: ${DANGEROUSLY_DISABLE_HOST_CHECK}
+    networks:
+      - newtone
+    depends_on:
+      - moviecat-backend
+
+  moviecat-postgresql:
+    image: postgres
+    container_name: moviecat-postgresql
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    volumes:
+      - moviecat_postgres_data:/var/lib/postgresql/data
+    networks:
+      - newtone
+
+  moviecat-adminer:
+    image: adminer
+    container_name: moviecat-adminer
+    restart: always
+    networks:
+      - newtone
+    ports:
+      - 8082:8080
+
+  moviecat-redis:
+    container_name: moviecat-redis
+    image: redis
+    restart: always
+    networks:
+      - newtone
+    volumes:
+      - moviecat_redis_data:/data
+
+networks:
+  newtone:
+    external: true
+
+volumes:
+  moviecat_postgres_data:
+    external: true
+  moviecat_redis_data:
+    external: true
+  dkim_data:
+    external: true
