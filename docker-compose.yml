@@ -2,7 +2,7 @@ services:
 
   moviecat-backend:
     container_name: moviecat-backend
-    build: ./backend
+    build: ./moviecat-backend
     environment:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
@@ -35,7 +35,7 @@ services:
 
   moviecat-web:
     container_name: moviecat-web
-    build: ./web
+    build: ./moviecat-web
     environment:
       DANGEROUSLY_DISABLE_HOST_CHECK: ${DANGEROUSLY_DISABLE_HOST_CHECK}
     networks:
