@@ -1,0 +1,6 @@
+[submodule "moviecat-web"]
+	path = moviecat-web
+	url = https://github.com/NikolasEagle/moviecat-web.git
+[submodule "moviecat-backend"]
+	path = moviecat-backend
+	url = https://github.com/NikolasEagle/moviecat-backend.git
