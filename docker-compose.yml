@@ -1,5 +1,4 @@
 services:
-
   moviecat-backend:
     container_name: moviecat-backend
     build: ./moviecat-backend
@@ -71,9 +70,6 @@ services:
     restart: always
     networks:
       - newtone
-    ports:
-      - 8082:8080
-
   moviecat-redis:
     container_name: moviecat-redis
     image: redis
