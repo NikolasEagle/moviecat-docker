@@ -4,14 +4,6 @@
 
 service="moviecat"
 
-# Path common secrets store
-
-env_path="/root/secrets/.env"
-
-# Init secrets
-
-source $env_path
-
 # Function getting list of secrets
 
 function get_list_secrets() {
@@ -74,13 +66,13 @@ for key_smtp in $keys_smtp; do
 
 done
 
-keys_moviecat=$(echo $(get_list_secrets "moviecat") | jq -r 'keys | .[]')
+keys_service=$(echo $(get_list_secrets $service) | jq -r 'keys | .[]')
 
-for key_moviecat in $keys_moviecat; do
+for key_service in $keys_service; do
 
-    secret=$(get_secret $key_moviecat "moviecat")
+    secret=$(get_secret $key_service "moviecat")
 
-    echo "$(echo $key_moviecat | tr [a-z] [A-Z])=$secret" >> .env
+    echo "$(echo $key_service | tr [a-z] [A-Z])=$secret" >> .env
 
 done
 
