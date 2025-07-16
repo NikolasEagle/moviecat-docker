@@ -70,7 +70,7 @@ keys_service=$(echo $(get_list_secrets $service) | jq -r 'keys | .[]')
 
 for key_service in $keys_service; do
 
-    secret=$(get_secret $key_service "moviecat")
+    secret=$(get_secret $key_service $service)
 
     echo "$(echo $key_service | tr [a-z] [A-Z])=$secret" >> .env
 
