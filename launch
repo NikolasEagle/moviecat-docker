@@ -34,7 +34,7 @@ function get_domain() {
 
 }
 
-domain=$(get_domain "func=domain" '.doc.elem.[0].name."$"')
+domain=$(get_domain "func=domain" '.doc.elem[0].name."$"')
 
 # Creating env file
 
@@ -56,7 +56,7 @@ echo "DOMAIN=$domain" >> .env
 
 echo "SMTP_USER=noreply@$domain" >> .env
 
-keys_smtp=$(echo $(get_list_secrets "smtp") | jq -r 'keys | .[]')
+keys_smtp=$(echo $(get_list_secrets "smtp") | jq -r 'keys[]')
 
 for key_smtp in $keys_smtp; do
 
@@ -66,7 +66,7 @@ for key_smtp in $keys_smtp; do
 
 done
 
-keys_service=$(echo $(get_list_secrets $service) | jq -r 'keys | .[]')
+keys_service=$(echo $(get_list_secrets $service) | jq -r 'keys[]')
 
 for key_service in $keys_service; do
 
